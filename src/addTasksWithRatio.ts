@@ -1,19 +1,21 @@
 import { config } from "https://deno.land/x/dotenv/mod.ts";
 
 const token = config().TODOIST_TOKEN;
+const parentId = Number.parseInt(config().PARENT_ID);
+const perRatio = 1;
 
-const perPage = 5;
-for (let p = 221; p < 516; p += perPage) {
+for (let p = 1; p <= 100; p += perRatio) {
   // @ts-ignore
   const uuid = crypto.randomUUID();
-  await addPages(p, perPage, uuid);
+  await addTasksWithRatio(p, uuid);
 }
 
-async function addPages(start: number, perPage: number, uuid: string) {
+async function addTasksWithRatio(ratio: number, uuid: string) {
   const data = {
-    content: `${start}-${start + perPage}`,
-    parent_id: 5247906157,
+    content: `${ratio}%`,
+    parent_id: parentId,
   };
+  console.log({ data });
   try {
     await fetch("https://api.todoist.com/rest/v1/tasks", {
       method: "POST", // or 'PUT'
